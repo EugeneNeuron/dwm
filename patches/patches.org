@@ -1,0 +1,17 @@
+* Applied/tested
+- [X] tag-indicator-big :: my tiny custom patch.
+- [ ] [[https://dwm.suckless.org/patches/activetagindicatorbar/][activetagindicatorbar]] :: looks bad for high fonts. Default size of tag indicator is a little bit small, so I applied tiny custom tag-indicator-big patch to make default rectangle tag indicator bigger.
+- [ ] [[https://dwm.suckless.org/patches/bar_height/][bar height]] :: it was need for activetagindicatorbar, but now I don't need it anymore.
+- [ ] [[https://dwm.suckless.org/patches/alttagsdecoration/][alttagsdecoration]] :: didn't find useful.
+* TODO
+- [ ] [[https://dwm.suckless.org/patches/attachdirection/][attachdirection]] :: Attachdirection is a merge of 1)attachabove, 2)attachaside, 3)attachbelow, 4)attachbottom and 5)attachtop
+  - [ ] [[https://dwm.suckless.org/patches/attachasideandbelow/][attachasideandbelow]] :: Combination between attachaside and attachbelow. Clients will not be pushed down in the stack, only resized, and the master can't be pushed to the slave stack by spawning another client.
+- aspectresize ::
+- [[https://dwm.suckless.org/patches/center/][center]] :: Add an iscentered rule to automatically center clients on the current monitor.
+  Don't think that it's useful, but will give it a try.
+- [[https://dwm.suckless.org/patches/alternativetags/][alternativetags]] :: Having icons as tags sure makes dwm look awesome, but having tags number simplifies tags related operations. This patch introduces alternative tags which can be switched on the fly for the sole purpose of providing visual aid.
+* Not tested
+- [[https://dwm.suckless.org/patches/actualfullscreen/][actualfullscreen]] :: Actually toggle fullscreen for a window, instead of toggling the status bar and the monocle layout.
+- [[https://dwm.suckless.org/patches/alpha/][alpha]] :: Allow dwm to have translucent bars, while keeping all the text on it opaque, just like the alpha-patch for st.
+- alwayscenter ::
+- alwaysfullscreen ::
