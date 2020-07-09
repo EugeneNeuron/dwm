@@ -5,6 +5,7 @@ static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
+static const int user_boxw          = 1;        /* 0 means that dwm will calculate rectangle box size, >= 1 means dwm add user_boxw to default boxw */
 static const char *fonts[]          = { "Monoid:style=Regular:size=11" };
 static const char dmenufont[]       = "Monoid:style=Regular:size=11";
 static const char col_gray1[]       = "#222222";
