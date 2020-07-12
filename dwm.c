@@ -153,6 +153,7 @@ static void attachaside(Client *c);
 static void attachbelow(Client *c);
 static void attachbottom(Client *c);
 static void attachtop(Client *c);
+static void attachasideandbelow(Client *c);
 static void attachstack(Client *c);
 static void buttonpress(XEvent *e);
 static void checkotherwm(void);
@@ -479,6 +480,27 @@ attachtop(Client *c)
 	}
 	else
 		c->mon->clients = c;
+}
+
+void
+attachasideandbelow(Client *c)
+{
+	//If there is nothing on the monitor or the selected client is floating, attach as normal
+	if(c->mon->sel == NULL || c->mon->sel->isfloating) {
+        Client *at = nexttagged(c);
+        if(!at) {
+            attach(c);
+            return;
+            }
+        c->next = at->next;
+        at->next = c;
+		return;
+	}
+
+	//Set the new client's next property to the same as the currently selected clients next
+	c->next = c->mon->sel->next;
+	//Set the currently selected clients next property to the new client
+	c->mon->sel->next = c;
 }
 
 void
@@ -1138,23 +1160,26 @@ manage(Window w, XWindowAttributes *wa)
 	if (c->isfloating)
 		XRaiseWindow(dpy, c->win);
 	switch(attachdirection){
-		case 1:
-			attachabove(c);
-			break;
-		case 2:
-			attachaside(c);
-			break;
-		case 3:
-			attachbelow(c);
-			break;
-		case 4:
-			attachbottom(c);
-			break;
-		case 5:
-			attachtop(c);
-			break;
-		default:
-			attach(c);
+	case 1:
+	  attachabove(c);
+	  break;
+	case 2:
+	  attachaside(c);
+	  break;
+	case 3:
+	  attachbelow(c);
+	  break;
+	case 4:
+	  attachbottom(c);
+	  break;
+	case 5:
+	  attachtop(c);
+	  break;
+	case 6:
+	  attachasideandbelow(c);
+	  break;
+	default:
+	  attach(c);
 	}
 	attachstack(c);
 	XChangeProperty(dpy, root, netatom[NetClientList], XA_WINDOW, 32, PropModeAppend,
@@ -1521,23 +1546,26 @@ sendmon(Client *c, Monitor *m)
 	c->mon = m;
 	c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
 	switch(attachdirection){
-		case 1:
-			attachabove(c);
-			break;
-		case 2:
-			attachaside(c);
-			break;
-		case 3:
-			attachbelow(c);
-			break;
-		case 4:
-			attachbottom(c);
-			break;
-		case 5:
-			attachtop(c);
-			break;
-		default:
-			attach(c);
+	case 1:
+	  attachabove(c);
+	  break;
+	case 2:
+	  attachaside(c);
+	  break;
+	case 3:
+	  attachbelow(c);
+	  break;
+	case 4:
+	  attachbottom(c);
+	  break;
+	case 5:
+	  attachtop(c);
+	  break;
+	case 6:
+	  attachasideandbelow(c);
+	  break;
+	default:
+	  attach(c);
 	}
 	attachstack(c);
 	focus(NULL);
@@ -2022,22 +2050,26 @@ updategeom(void)
 					c->mon = mons;
 					switch(attachdirection){
 					case 1:
-						attachabove(c);
-						break;
+					  attachabove(c);
+					  break;
 					case 2:
-						attachaside(c);
-						break;
+					  attachaside(c);
+					  break;
 					case 3:
-						attachbelow(c);
-						break;
+					  attachbelow(c);
+					  break;
 					case 4:
-						attachbottom(c);
-						break;
+					  attachbottom(c);
+					  break;
 					case 5:
-						attachtop(c);
-						break;
+					  attachtop(c);
+					  break;
+					case 6:
+					  attach(c);
+					  attachasideandbelow(c);
+					  break;
 					default:
-						attach(c);
+					  attach(c);
 					}
 					attachstack(c);
 				}
