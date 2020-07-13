@@ -154,6 +154,7 @@ static void attachbelow(Client *c);
 static void attachbottom(Client *c);
 static void attachtop(Client *c);
 static void attachasideandbelow(Client *c);
+static void toggleattach(const Arg *arg);
 static void attachstack(Client *c);
 static void buttonpress(XEvent *e);
 static void checkotherwm(void);
@@ -501,6 +502,19 @@ attachasideandbelow(Client *c)
 	c->next = c->mon->sel->next;
 	//Set the currently selected clients next property to the new client
 	c->mon->sel->next = c;
+}
+
+/* switch between two staregies of attach direction */
+void
+toggleattach(const Arg *arg)
+{
+  if ( attachdirection != arg->i ) {
+    attachinactive = attachdirection;
+    attachdirection = arg->i;
+  } else {
+    attachdirection = attachinactive;
+    attachinactive = arg->i;
+  }
 }
 
 void
