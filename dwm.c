@@ -148,11 +148,7 @@ static int applysizehints(Client *c, int *x, int *y, int *w, int *h, int interac
 static void arrange(Monitor *m);
 static void arrangemon(Monitor *m);
 static void attach(Client *c);
-static void attachabove(Client *c);
-static void attachaside(Client *c);
-static void attachbelow(Client *c);
 static void attachbottom(Client *c);
-static void attachtop(Client *c);
 static void attachasideandbelow(Client *c);
 static void toggleattach(const Arg *arg);
 static void attachstack(Client *c);
@@ -417,42 +413,6 @@ attach(Client *c)
 }
 
 void
-attachabove(Client *c)
-{
-	if (c->mon->sel == NULL || c->mon->sel == c->mon->clients || c->mon->sel->isfloating) {
-		attach(c);
-		return;
-	}
-
-	Client *at;
-	for (at = c->mon->clients; at->next != c->mon->sel; at = at->next);
-	c->next = at->next;
-	at->next = c;
-}
-
-void
-attachaside(Client *c) {
-	Client *at = nexttagged(c);
-	if(!at) {
-		attach(c);
-		return;
-		}
-	c->next = at->next;
-	at->next = c;
-}
-
-void
-attachbelow(Client *c)
-{
-	if(c->mon->sel == NULL || c->mon->sel == c || c->mon->sel->isfloating) {
-		attach(c);
-		return;
-	}
-	c->next = c->mon->sel->next;
-	c->mon->sel->next = c;
-}
-
-void
 attachbottom(Client *c)
 {
 	Client *below = c->mon->clients;
@@ -460,25 +420,6 @@ attachbottom(Client *c)
 	c->next = NULL;
 	if (below)
 		below->next = c;
-	else
-		c->mon->clients = c;
-}
-
-void
-attachtop(Client *c)
-{
-	int n;
-	Monitor *m = selmon;
-	Client *below;
-
-	for (n = 1, below = c->mon->clients;
-		below && below->next && (below->isfloating || !ISVISIBLEONTAG(below, c->tags) || n != m->nmaster);
-		n = below->isfloating || !ISVISIBLEONTAG(below, c->tags) ? n + 0 : n + 1, below = below->next);
-	c->next = NULL;
-	if (below) {
-		c->next = below->next;
-		below->next = c;
-	}
 	else
 		c->mon->clients = c;
 }
@@ -1174,20 +1115,8 @@ manage(Window w, XWindowAttributes *wa)
 	if (c->isfloating)
 		XRaiseWindow(dpy, c->win);
 	switch(attachdirection){
-	case 1:
-	  attachabove(c);
-	  break;
-	case 2:
-	  attachaside(c);
-	  break;
-	case 3:
-	  attachbelow(c);
-	  break;
 	case 4:
 	  attachbottom(c);
-	  break;
-	case 5:
-	  attachtop(c);
 	  break;
 	case 6:
 	  attachasideandbelow(c);
@@ -1560,20 +1489,8 @@ sendmon(Client *c, Monitor *m)
 	c->mon = m;
 	c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
 	switch(attachdirection){
-	case 1:
-	  attachabove(c);
-	  break;
-	case 2:
-	  attachaside(c);
-	  break;
-	case 3:
-	  attachbelow(c);
-	  break;
 	case 4:
 	  attachbottom(c);
-	  break;
-	case 5:
-	  attachtop(c);
 	  break;
 	case 6:
 	  attachasideandbelow(c);
@@ -2063,20 +1980,8 @@ updategeom(void)
 					detachstack(c);
 					c->mon = mons;
 					switch(attachdirection){
-					case 1:
-					  attachabove(c);
-					  break;
-					case 2:
-					  attachaside(c);
-					  break;
-					case 3:
-					  attachbelow(c);
-					  break;
 					case 4:
 					  attachbottom(c);
-					  break;
-					case 5:
-					  attachtop(c);
 					  break;
 					case 6:
 					  attach(c);
