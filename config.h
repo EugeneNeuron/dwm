@@ -36,6 +36,7 @@ static const Rule rules[] = {
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
+static int attachinactive, attachdirection = 4;    /* 0 default, 1 above, 2 aside, 3 below, 4 bottom, 5 top, 6 attachasideandbelow */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
@@ -95,6 +96,8 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	/* custom bindings */
+	{ MODKEY|ShiftMask,             XK_s,      toggleattach,   {.i = 6 } },
 };
 
 /* button definitions */
